@@ -2,8 +2,6 @@
 
 *A strange but effective way to play music with your PC keyboard(s)*
 
----
-
 **Complete readme and instruction coming soon! This is just a draft.**
 
 Computharp is a highly hackable Digital Musical Instrument and MIDI controller made to play music with computer keyboards. Plural, because Computharp is able to distinguish between multiple keyboards, and assign controls to them independently. In this way, you can use both hands to play on different octaves, on different keyboards.
@@ -20,8 +18,6 @@ Scores can be written as words. A major scale, for example, could be written as 
 
 ## Dependencies
 
----
-
 - [GitHub - Neeqstock/NeeqDMIs](https://github.com/Neeqstock/NeeqDMIs): you have to reference this project from Computharp;
 
 - A lot of other packages which you should restore from NuGet.
@@ -29,8 +25,6 @@ Scores can be written as words. A major scale, for example, could be written as 
 
 
 ## Installation
-
----
 
 The application is standalone. Get the latest release from the [Releases](https://github.com/Neeqstock/Computharp/releases) page and launch *Computharp.exe*.
 
