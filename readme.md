@@ -4,7 +4,7 @@
 
 ---
 
-**Complete readme coming soon!**
+**Complete readme and instruction coming soon! This is just a draft.**
 
 Computharp is a highly hackable Digital Musical Instrument and MIDI controller made to play music with computer keyboards. Plural, because Computharp is able to distinguish between multiple keyboards, and assign controls to them independently. In this way, you can use both hands to play on different octaves, on different keyboards.
 
@@ -14,9 +14,7 @@ Every keyboard can be tuned in a different way, and the interface can highlight 
 
 Scores can be written as words. A major scale, for example, could be written as "**cbfgry56**". Theoretically, I expect some writing skills can be transfered into music playing skills.
 
-
-
-![Screenshot (2022 june 13).png](\Images\Screenshot%20(2022%20june%2013).png)
+![Screenshot](https://github.com/Neeqstock/Computharp/blob/main/Images/Screenshot%20(2022%20june%2013).png)
 
 
 
