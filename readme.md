@@ -16,7 +16,7 @@ Scores can be written as words. A major scale, for example, could be written as 
 
 
 
-![Screenshot (2022 june 13).png](C:\Users\neequ\OneDrive\Documenti\GitHub\Computharp\Images\Screenshot%20(2022%20june%2013).png)
+![Screenshot (2022 june 13).png](Images\Screenshot%20(2022%20june%2013).png)
 
 
 
