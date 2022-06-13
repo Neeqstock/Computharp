@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "JDfyQzYHX9nlbRhvLKW4cij+UJBEGyC8/245OPFY+d+ZFXR/EMoWlz/nmCR6ptS3ooh0k0+MGX3xM7Uo20wJSQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\neequ\\.nuget\\packages\\rawinputprocessor\\1.0.0\\rawinputprocessor.1.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'RawInputProcessor 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "RawInputProcessor",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    }
+  ]
+}
