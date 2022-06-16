@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ColorHelper" Version="1.6.2" />
     <PackageReference Include="RawInputProcessor" Version="1.0.0" />
   </ItemGroup>
 

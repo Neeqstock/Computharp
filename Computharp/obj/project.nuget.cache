@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "JDfyQzYHX9nlbRhvLKW4cij+UJBEGyC8/245OPFY+d+ZFXR/EMoWlz/nmCR6ptS3ooh0k0+MGX3xM7Uo20wJSQ==",
+  "dgSpecHash": "E5L6vSv+OXXXE1drU8AkDFr30sB3w/RfTZqp8LXNgKDiyW0yVESHbgFijBykm1g4rbR+xDxdin+gOcb11bVmXw==",
   "success": true,
   "projectFilePath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\neequ\\.nuget\\packages\\colorhelper\\1.6.2\\colorhelper.1.6.2.nupkg.sha512",
     "C:\\Users\\neequ\\.nuget\\packages\\rawinputprocessor\\1.0.0\\rawinputprocessor.1.0.0.nupkg.sha512"
   ],
   "logs": [

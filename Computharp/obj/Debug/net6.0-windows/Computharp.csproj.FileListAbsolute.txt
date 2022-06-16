@@ -36,3 +36,4 @@ C:\Users\neequ\OneDrive\Documenti\GitHub\Computharp\Computharp\bin\Debug\net6.0-
 C:\Users\neequ\OneDrive\Documenti\GitHub\Computharp\Computharp\bin\Debug\net6.0-windows\NeeqDMIs.dll.config
 C:\Users\neequ\OneDrive\Documenti\GitHub\Computharp\Computharp\bin\Debug\net6.0-windows\Newtonsoft.Json.xml
 C:\Users\neequ\OneDrive\Documenti\GitHub\Computharp\Computharp\obj\Debug\net6.0-windows\Computharp.csproj.CopyComplete
+C:\Users\neequ\OneDrive\Documenti\GitHub\Computharp\Computharp\bin\Debug\net6.0-windows\ColorHelper.dll

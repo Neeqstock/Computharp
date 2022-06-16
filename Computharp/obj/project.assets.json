@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0-windows7.0": {
+      "ColorHelper/1.6.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/ColorHelper.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/ColorHelper.dll": {}
+        }
+      },
       "RawInputProcessor/1.0.0": {
         "type": "package",
         "compile": {
@@ -23,6 +32,19 @@
     }
   },
   "libraries": {
+    "ColorHelper/1.6.2": {
+      "sha512": "vkf8bJ/wc4aYhbEqFXNC6aVjArb77HFExaLS9CL3s++ZXuEjs9FIpLyJlbXxKgcOfmLi1GiZiJGG71zokr1+XA==",
+      "type": "package",
+      "path": "colorhelper/1.6.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "colorhelper.1.6.2.nupkg.sha512",
+        "colorhelper.nuspec",
+        "lib/netstandard2.0/ColorHelper.dll",
+        "logo.jpg"
+      ]
+    },
     "RawInputProcessor/1.0.0": {
       "sha512": "Orr3uVAxQHA0k8zRf8lp+xVqBwjOglbQemycVnJEpIOpfu8noR/XS+PUJKdVJ1IKWDW7wjErDzsMWPyuV6PKvA==",
       "type": "package",
@@ -43,6 +65,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
+      "ColorHelper >= 1.6.2",
       "NeeqDMIs >= 1.0.0",
       "RawInputProcessor >= 1.0.0"
     ]
@@ -91,6 +114,10 @@
       "net6.0-windows7.0": {
         "targetAlias": "net6.0-windows",
         "dependencies": {
+          "ColorHelper": {
+            "target": "Package",
+            "version": "[1.6.2, )"
+          },
           "RawInputProcessor": {
             "target": "Package",
             "version": "[1.0.0, )"

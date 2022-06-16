@@ -1,28 +1,26 @@
-﻿using Computharp.Behaviors;
+﻿using ColorHelper;
+using Computharp.Behaviors;
+using NeeqDMIs.Filters.ValueFilters;
 using NeeqDMIs.Keyboard;
 using NeeqDMIs.MIDI;
+using NeeqDMIs.Mouse;
 using NeeqDMIs.Music;
 using RawInputProcessor;
-using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace Computharp.Modules
 {
     public class ComputharpDmiBox
     {
-        public MainWindow MW { get; set; }
-        public KeyboardModule KeyboardModule { get; set; }
-        public MidiModuleNAudio MidiModule { get; set; }
+        #region Unintegrated values
 
-        public Keyboard PrimaryKeyboard { get; set; }
-        public Keyboard SecondaryKeyboard { get; set; }
+        private bool bowStaccatos = false; // todo: bug. Sometimes noteOn get stuck with SWAM Viola
 
-        public int MasterPitch { get; set; } = 60;
-        public int HRule { get; set; } = 1;
-        public int VRule { get; set; } = 3;
+        #endregion Unintegrated values
 
         public List<KeyValuePair<Button, Key>> K_Row0;
         public List<KeyValuePair<Button, Key>> K_Row1;
@@ -30,17 +28,64 @@ namespace Computharp.Modules
         public List<KeyValuePair<Button, Key>> K_Row3;
         public List<KeyValuePair<Button, Key>> K_Row4;
         public List<KeyValuePair<Button, Key>> K_Fun;
-
         public List<MidiNotes> NotesOn = new List<MidiNotes>();
-        public List<MidiNotes> DroneNotes = new List <MidiNotes>();
+        public List<MidiNotes> DroneNotes = new List<MidiNotes>();
+        public List<MidiNotes> OctavePedalNotes = new List<MidiNotes>();
+        private Scale? currentScale = null;
+        public int OctavePedalRule { get; set; } = -12;
 
-        public bool AltSelector { get; set; } = false;
-        public bool DronePedal { get; set; } = false;
+        private bool octavePedal = false;
+        public bool OctavePedal
+        {
+            get { return octavePedal; }
+            set
+            {
+                // LOGIC: change immediately all notes octave, ignoring drone pedal notes
+                octavePedal = value;
+                List<MidiNotes> NotesOnCopy = new List<MidiNotes>(NotesOn);
 
-        public int ModulationMin { get; set; } = 0;
-        public int ModulationMax { get; set; } = 50;
+                if (!octavePedal)
+                {    
+                    foreach(MidiNotes note in NotesOnCopy)
+                    {
+                        if (!DroneNotes.Contains(note))
+                        {
+                            NoteOff(note);
+                            NotesOn.Remove(note);
+                            NoteOn(note - OctavePedalRule);
+                            NotesOn.Add(note - OctavePedalRule);
+                        }
+                    }
+                }
+                else if (octavePedal)
+                {
+                    foreach (MidiNotes note in NotesOnCopy)
+                    {
+                        if (!DroneNotes.Contains(note))
+                        {
+                            NoteOff(note);
+                            NotesOn.Remove(note);
+                            NoteOn(note + OctavePedalRule);
+                            NotesOn.Add(note + OctavePedalRule);
+                        }
+                    }
+                }
+            }
+        }
+        public Scale? CurrentScale
+        {
+            get { return currentScale; }
+            set
+            {
+                currentScale = value;
+                HighlightScale(currentScale);
+            }
+        }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public ComputharpDmiBox(MainWindow window)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             MW = window;
 
@@ -53,8 +98,111 @@ namespace Computharp.Modules
             KeyboardModule = new KeyboardModule(new WindowInteropHelper(window).Handle);
             KeyboardModule.KeyboardBehaviors.Add(new KBlistenKeystrokes());
 
-            NotifyIndicatorsChange();
+            MouseModule = new MouseModule(20000, 17f, new DoubleFilterMAExpDecaying(0.1f), new DoubleFilterMAExpDecaying(0.1f), MouseModuleModes.Normal, 150f);
+            MouseModule.Behaviors.Add(new MBlistenMouseBow());
+            MouseModule.StartPolling();
 
+            NotifyIndicatorsChange();
+        }
+
+        public MainWindow MW { get; set; }
+        public KeyboardModule KeyboardModule { get; set; }
+        public MouseModule MouseModule { get; set; }
+        public MidiModuleNAudio MidiModule { get; set; }
+
+        public Keyboard PrimaryKeyboard { get; set; }
+        public Keyboard SecondaryKeyboard { get; set; }
+
+        public int MasterPitch { get; set; } = 60;
+        public int HRule { get; set; } = 1;
+        public int VRule { get; set; } = 3;
+        public bool AltSelector { get; set; } = false;
+        public bool DronePedal { get; set; } = false;
+
+        public int ModulationMin { get; set; } = 0;
+        public int ModulationMax { get; set; } = 50;
+
+        private bool bowOn = false;
+
+        public bool BowOn
+        {
+            get { return bowOn; }
+            set
+            {
+                bowOn = value;
+                switch (bowOn)
+                {
+                    case true:
+                        Pressure = 0;
+                        MouseModule.SetFpsOffsetToCurrentMousePosition();
+                        MouseModule.MouseMode = MouseModuleModes.FPS;
+                        MouseModule.SetCursorVisible(false);
+                        MouseModule.SetCursorVisible(false);
+                        MouseModule.SetCursorVisible(false);
+                        MouseModule.SetCursorVisible(false);
+                        MouseModule.SetCursorVisible(false);
+                        break;
+
+                    case false:
+                        Pressure = 127;
+                        MouseModule.MouseMode = MouseModuleModes.Normal;
+                        MouseModule.SetCursorVisible(true);
+                        MouseModule.SetCursorVisible(true);
+                        MouseModule.SetCursorVisible(true);
+                        MouseModule.SetCursorVisible(true);
+                        MouseModule.SetCursorVisible(true);
+                        break;
+                }
+                NotifyIndicatorsChange();
+            }
+        }
+
+        public double BowForce { get; set; } = 1f;
+
+        private List<MidiNotes> tempNotesOn;
+
+        internal void ReceiveBowGesture(double velocityY, bool directionChange)
+        {
+            if (BowOn)
+            {
+                if (directionChange && bowStaccatos)
+                {
+                    tempNotesOn = new List<MidiNotes>(NotesOn);
+                    foreach (MidiNotes note in tempNotesOn)
+                    {
+                        NoteOff(note);
+                        NoteOn(note);
+                    }
+                }
+                Pressure = (int)(velocityY * BowForce);
+            }
+        }
+
+        internal void ReceiveKeyStroke(RawInputEventArgs e)
+        {
+            MW.lbl_KeyCode.Content = e.Key.ToString();
+            MW.lbl_KeyState.Content = e.KeyPressState.ToString();
+
+            // Separated into two cycles with return to give priority to notes
+            foreach (List<KKey> kKeys in PrimaryKeyboard.NoteKeys)
+            {
+                foreach (KKey k in kKeys)
+                {
+                    if (e.Key.Equals(k.Key))
+                    {
+                        ProcessKeyStateChange(e, k);
+                        return;     // Break free if key was found
+                    }
+                }
+            }
+            foreach (KKey k in PrimaryKeyboard.FunKeys)
+            {
+                if (e.Key.Equals(k.Key))
+                {
+                    ProcessKeyStateChange(e, k);
+                    return;         // Break free if key was found
+                }
+            }
         }
 
         private void NotifyIndicatorsChange()
@@ -73,27 +221,36 @@ namespace Computharp.Modules
                 MW.lbl_PrimaryKeyboardTransp.Content = "-";
                 MW.lbl_PrimaryKeyboardOctave.Content = "-";
             }
-                
-            if(SecondaryKeyboard.RawDevice != null)
+
+            if (SecondaryKeyboard.RawDevice != null)
             {
                 MW.lbl_SecondaryKeyboardId.Content = SecondaryKeyboard.RawDevice.Name.ToString();
                 MW.lbl_SecondaryKeyboardTransp.Content = SecondaryKeyboard.Transp.ToString();
                 MW.lbl_SecondaryKeyboardOctave.Content = SecondaryKeyboard.Octave.ToString();
             }
-
             else
             {
                 MW.lbl_SecondaryKeyboardId.Content = "-";
                 MW.lbl_SecondaryKeyboardTransp.Content = "-";
                 MW.lbl_SecondaryKeyboardOctave.Content = "-";
             }
-                
+
+            switch (BowOn)
+            {
+                case true:
+                    MW.lbl_BowOn.Content = "On";
+                    break;
+
+                case false:
+                    MW.lbl_BowOn.Content = "Off";
+                    break;
+            }
         }
 
         private void CreateKeysLists()
         {
             KeyValuePair<Button, Key> RogueKey = new KeyValuePair<Button, Key>(MW.b_less, Key.OemBackslash);
-            
+
             K_Row0 = new List<KeyValuePair<Button, Key>>()
             {
                 new KeyValuePair<Button, Key>(MW.b_z, Key.Z),
@@ -181,7 +338,7 @@ namespace Computharp.Modules
                 new KeyValuePair<Button, Key>(MW.b_up, Key.Up),
                 new KeyValuePair<Button, Key>(MW.b_right, Key.Right),
                 new KeyValuePair<Button, Key>(MW.b_down, Key.Down),
-                
+
                 new KeyValuePair<Button, Key>(MW.b_lshift, Key.LeftShift),
                 new KeyValuePair<Button, Key>(MW.b_less, Key.OemBackslash),
                 new KeyValuePair<Button, Key>(MW.b_rshift, Key.RightShift),
@@ -216,8 +373,6 @@ namespace Computharp.Modules
                 new KeyValuePair<Button, Key>(MW.b_fine, Key.End),
                 new KeyValuePair<Button, Key>(MW.b_pgup, Key.PageUp),
                 new KeyValuePair<Button, Key>(MW.b_pgdn, Key.Next),
-
-
             };
         }
 
@@ -232,23 +387,23 @@ namespace Computharp.Modules
             PrimaryKeyboard.FunKeys = new List<KKey>();
             int i;
 
-            // Row 1
+            // Row 0
             i = MasterPitch;
-            foreach(KeyValuePair<Button, Key> kvp in K_Row0)
+            foreach (KeyValuePair<Button, Key> kvp in K_Row0)
             {
                 PrimaryKeyboard.NoteKeys[0].Add(new KKey() { Button = kvp.Key, Key = kvp.Value, KKeyType = KKeyTypes.Note, MidiNote = (MidiNotes)i });
                 i += HRule;
             }
 
-            // Row 2
+            // Row 1
             i = MasterPitch + VRule;
-            foreach(KeyValuePair<Button, Key> kvp in K_Row1)
+            foreach (KeyValuePair<Button, Key> kvp in K_Row1)
             {
                 PrimaryKeyboard.NoteKeys[1].Add(new KKey() { Button = kvp.Key, Key = kvp.Value, KKeyType = KKeyTypes.Note, MidiNote = (MidiNotes)i });
                 i += HRule;
             }
 
-            // Row 3
+            // Row 2
             i = MasterPitch + VRule * 2;
             foreach (KeyValuePair<Button, Key> kvp in K_Row2)
             {
@@ -256,7 +411,7 @@ namespace Computharp.Modules
                 i += HRule;
             }
 
-            // Row 4
+            // Row 3
             i = MasterPitch + VRule * 3;
             foreach (KeyValuePair<Button, Key> kvp in K_Row3)
             {
@@ -264,7 +419,7 @@ namespace Computharp.Modules
                 i += HRule;
             }
 
-            // Row 5
+            // Row 4
             i = MasterPitch + VRule * 4;
             foreach (KeyValuePair<Button, Key> kvp in K_Row4)
             {
@@ -337,59 +492,20 @@ namespace Computharp.Modules
                 SecondaryKeyboard.FunKeys.Add(new KKey() { Button = kvp.Key, Key = kvp.Value, KKeyType = KKeyTypes.Functional, MidiNote = MidiNotes.NaN });
                 i += HRule;
             }
-
-        }
-
-
-        internal void ReceiveKeyStroke(RawInputEventArgs e)
-        {
-            MW.lbl_KeyCode.Content = e.Key.ToString();
-
-            bool isNote = false;
-
-            foreach(List<KKey> kKeys in PrimaryKeyboard.NoteKeys)
-            {
-                foreach(KKey k in kKeys)
-                {
-                    if (e.Key.Equals(k.Key))
-                    {
-                        //if (e.KeyPressState != k.KeyPressState)
-                        //{
-                            isNote = true;
-                            ProcessKeyStateChange(e, k);
-                        //}
-                    }
-                }
-            }
-
-            // Process as function key if key is not a notekey
-            if (!isNote)
-            {
-                foreach(KKey k in PrimaryKeyboard.FunKeys)
-                {
-                    if (e.Key.Equals(k.Key))
-                    {
-                        if(e.KeyPressState != k.KeyPressState)
-                        {
-                            ProcessKeyStateChange(e, k);
-                        }
-                    }
-                }
-            }
         }
 
         private void ProcessKeyStateChange(RawInputEventArgs rawEvent, KKey kkey)
         {
             // Keyboard Identification
             Keyboards kb = Keyboards.NaK;
-            if(PrimaryKeyboard.RawDevice != null)
+            if (PrimaryKeyboard.RawDevice != null)
             {
                 if (rawEvent.Device.Name == PrimaryKeyboard.RawDevice.Name)
                 {
                     kb = Keyboards.Primary;
                 }
             }
-            if(SecondaryKeyboard.RawDevice != null)
+            if (SecondaryKeyboard.RawDevice != null)
             {
                 if (rawEvent.Device.Name == SecondaryKeyboard.RawDevice.Name)
                 {
@@ -397,244 +513,480 @@ namespace Computharp.Modules
                 }
             }
 
+            // Background setting
             switch (rawEvent.KeyPressState)
             {
                 case KeyPressState.Up:
-                    switch (kkey.KKeyType)
-                    {
-                        case KKeyTypes.Note:
-                            MidiNotes noteToPlay = MidiNotes.NaN;
-                            switch (kb)
-                            {
-                                case Keyboards.Primary:
-                                    noteToPlay = kkey.MidiNote + PrimaryKeyboard.Transp + 12 * PrimaryKeyboard.Octave;
-                                    break;
-                                case Keyboards.Secondary:
-                                    noteToPlay = kkey.MidiNote + SecondaryKeyboard.Transp + 12 * SecondaryKeyboard.Octave;
-                                    break;
-                                case Keyboards.NaK:
-                                    noteToPlay = MidiNotes.NaN;
-                                    break;
-                            }
-                             
-                            if (NotesOn.Contains(noteToPlay))
-                            {
-                                NotesOn.Remove(noteToPlay);
-                                NoteOff(noteToPlay);
-                                
-                            }
-                            break;
-                        case KKeyTypes.Functional:
-                            ProcessFunctionChange(rawEvent.Device, kkey.Key, KeyPressState.Up);
-                            break;
-                    }
-                    kkey.KeyPressState = KeyPressState.Up;
                     kkey.Button.Background = kkey.BaseBackground;
                     break;
 
                 case KeyPressState.Down:
-                    switch (kkey.KKeyType)
-                    {
-                        case KKeyTypes.Note:
-                            MidiNotes noteToPlay = MidiNotes.NaN;
-                            switch (kb)
-                            {
-                                case Keyboards.Primary:
-                                    noteToPlay = kkey.MidiNote + PrimaryKeyboard.Transp + 12 * PrimaryKeyboard.Octave;
-                                    break;
-                                case Keyboards.Secondary:
-                                    noteToPlay = kkey.MidiNote + SecondaryKeyboard.Transp + 12 * SecondaryKeyboard.Octave;
-                                    break;
-                                case Keyboards.NaK:
-                                    noteToPlay = MidiNotes.NaN;
-                                    break;
-                            }
-
-                            if (!NotesOn.Contains(noteToPlay))
-                            {
-                                NotesOn.Add(noteToPlay);
-                                NoteOn(noteToPlay);
-                            }
-                            break;
-                        case KKeyTypes.Functional:
-                            ProcessFunctionChange(rawEvent.Device, kkey.Key, KeyPressState.Down);
-                            break;
-                    }
-                    kkey.KeyPressState = KeyPressState.Down;
-
-                    // Decide key background given keyboard
-                    switch (kb)
-                    {
-                        case Keyboards.Primary:
-                            kkey.Button.Background = Rack.BrushActivePrimary;
-                            break;
-                        case Keyboards.Secondary:
-                            kkey.Button.Background = Rack.BrushActiveSecondary;
-                            break;
-                        case Keyboards.NaK:
-                            break;
-                    }
+                    SetActiveBackgroundGivenKeyboard(kkey, kb);
                     break;
+            }
+
+            // Event rerouting. Note keys send to note change, function keys OR note keys + alt. modifier send to functions
+            if (kkey.KKeyType == KKeyTypes.Note && !AltSelector)
+            {
+                ProcessNoteKeyChange(rawEvent, kkey, kb);
+            }
+            else if (kkey.KKeyType == KKeyTypes.Functional || (kkey.KKeyType == KKeyTypes.Note && AltSelector))
+            {
+                ProcessFunctionKeyChange(rawEvent, kkey, kb);
             }
         }
 
-        private void ProcessFunctionChange(RawKeyboardDevice device, Key key, KeyPressState state)
+        private void ProcessFunctionKeyChange(RawInputEventArgs rawEvent, KKey kkey, Keyboards kb)
         {
-            if (state == KeyPressState.Down)
+            if (rawEvent.KeyPressState != kkey.KeyPressState)
             {
-                switch (key)
+                kkey.KeyPressState = rawEvent.KeyPressState;
+
+                if (rawEvent.KeyPressState == KeyPressState.Down) // Key Down
                 {
-                    // Midi Out selection
-                    case Key.PageUp:
-                        MidiModule.OutDevice++;
-                        NotifyIndicatorsChange();
-                        break;
-                    case Key.PageDown:
-                        MidiModule.OutDevice--;
-                        NotifyIndicatorsChange();
-                        break;
-
-                    // Scales Highlighting
-                    case Key.NumPad0:
-                        HighlightScale(ScalesFactory.Cmaj);
-                        break;
-                    case Key.Decimal:
-                        HighlightScale(ScalesFactory.sCmaj);
-                        break;
-                    case Key.NumPad1:
-                        HighlightScale(ScalesFactory.Dmaj);
-                        break;
-                    case Key.NumPad2:
-                        HighlightScale(ScalesFactory.sDmaj);
-                        break;
-                    case Key.NumPad3:
-                        HighlightScale(ScalesFactory.Emaj);
-                        break;
-                    case Key.NumPad4:
-                        HighlightScale(ScalesFactory.Fmaj);
-                        break;
-                    case Key.NumPad5:
-                        HighlightScale(ScalesFactory.sFmaj);
-                        break;
-                    case Key.NumPad6:
-                        HighlightScale(ScalesFactory.Gmaj);
-                        break;
-                    case Key.NumPad7:
-                        HighlightScale(ScalesFactory.sGmaj);
-                        break;
-                    case Key.NumPad8:
-                        HighlightScale(ScalesFactory.Amaj);
-                        break;
-                    case Key.NumPad9:
-                        HighlightScale(ScalesFactory.sAmaj);
-                        break;
-                    case Key.Divide:
-                        HighlightScale(ScalesFactory.Bmaj);
-                        break;
-                    case Key.Multiply:
-                        HighlightScale(null);
-                        break;
-
-                    // Alt selector
-                    case Key.RightCtrl:
-                        AltSelector = true;
-                        break;
-
-                    // Drone pedal
-                    case Key.LeftCtrl:
-                        ProcessDronePedal();
-                        break;
-
-                    // Modulator key
-                    case Key.Return:
-                        ProcessModulator(true);
-                        break;
-
-                    // MainKeyboard selector
-                    case Key.Delete:
-                        SetPrimaryKeyboard(device);
-                        break;
-                    // SecondaryKeyboard selector
-                    case Key.Insert:
-                        SetSecondaryKeyboard(device);
-                        break;
-
-                    // Octave
-                    case Key.Up:
-                        if(device == PrimaryKeyboard.RawDevice)
+                    if (!AltSelector) // Alt selector off
+                    {
+                        switch (rawEvent.Key)
                         {
-                            PrimaryKeyboard.Octave++;
-                        }
-                        if(device == SecondaryKeyboard.RawDevice)
-                        {
-                            SecondaryKeyboard.Octave++;
-                        }
-                        NotifyIndicatorsChange();
-                        break;
-                    case Key.Down:
-                        if (device == PrimaryKeyboard.RawDevice)
-                        {
-                            PrimaryKeyboard.Octave--;
-                        }
-                        if (device == SecondaryKeyboard.RawDevice)
-                        {
-                            SecondaryKeyboard.Octave--;
-                        }
-                        NotifyIndicatorsChange();
-                        break;
+                            // Midi Out selection
+                            case Key.PageUp:
+                                MidiModule.OutDevice++;
+                                NotifyIndicatorsChange();
+                                break;
 
-                    // Transpose
-                    case Key.Right:
-                        if (device == PrimaryKeyboard.RawDevice)
-                        {
-                            PrimaryKeyboard.Transp++;
-                        }
-                        if (device == SecondaryKeyboard.RawDevice)
-                        {
-                            SecondaryKeyboard.Transp++;
-                        }
-                        NotifyIndicatorsChange();
-                        break;
-                    case Key.Left:
-                        if (device == PrimaryKeyboard.RawDevice)
-                        {
-                            PrimaryKeyboard.Transp--;
-                        }
-                        if (device == SecondaryKeyboard.RawDevice)
-                        {
-                            SecondaryKeyboard.Transp--;
-                        }
-                        NotifyIndicatorsChange();
-                        break;
+                            case Key.PageDown:
+                                MidiModule.OutDevice--;
+                                NotifyIndicatorsChange();
+                                break;
 
-                    default:
-                        break;
+                            // Scales Highlighting
+                            case Key.NumPad0:
+                                CurrentScale = ScalesFactory.Cmaj;
+                                break;
+
+                            case Key.Decimal:
+                                CurrentScale = ScalesFactory.sCmaj;
+                                break;
+
+                            case Key.NumPad1:
+                                CurrentScale = ScalesFactory.Dmaj;
+                                break;
+
+                            case Key.NumPad2:
+                                CurrentScale = ScalesFactory.sDmaj;
+                                break;
+
+                            case Key.NumPad3:
+                                CurrentScale = ScalesFactory.Emaj;
+                                break;
+
+                            case Key.NumPad4:
+                                CurrentScale = ScalesFactory.Fmaj;
+                                break;
+
+                            case Key.NumPad5:
+                                CurrentScale = ScalesFactory.sFmaj;
+                                break;
+
+                            case Key.NumPad6:
+                                CurrentScale = ScalesFactory.Gmaj;
+                                break;
+
+                            case Key.NumPad7:
+                                CurrentScale = ScalesFactory.sGmaj;
+                                break;
+
+                            case Key.NumPad8:
+                                CurrentScale = ScalesFactory.Amaj;
+                                break;
+
+                            case Key.NumPad9:
+                                CurrentScale = ScalesFactory.sAmaj;
+                                break;
+
+                            case Key.Divide:
+                                CurrentScale = ScalesFactory.Bmaj;
+                                break;
+
+                            case Key.Multiply:
+                                CurrentScale = null;
+                                break;
+
+                            // Alt selector
+                            case Key.RightCtrl:
+                                AltSelector = true;
+                                break;
+
+                            // Drone pedal
+                            case Key.LeftCtrl:
+                                ProcessDronePedal();
+                                break;
+
+                            // Modulator key
+                            case Key.Return:
+                                ProcessModulator(true);
+                                break;
+
+                            // MainKeyboard selector
+                            case Key.Delete:
+                                SetPrimaryKeyboard(rawEvent.Device);
+                                break;
+                            // SecondaryKeyboard selector
+                            case Key.Insert:
+                                SetSecondaryKeyboard(rawEvent.Device);
+                                break;
+
+                            // Octave scroll
+                            case Key.Up:
+                                if (rawEvent.Device == PrimaryKeyboard.RawDevice)
+                                {
+                                    PrimaryKeyboard.Octave++;
+                                }
+                                if (rawEvent.Device == SecondaryKeyboard.RawDevice)
+                                {
+                                    SecondaryKeyboard.Octave++;
+                                }
+                                NotifyIndicatorsChange();
+                                break;
+
+                            case Key.Down:
+                                if (rawEvent.Device == PrimaryKeyboard.RawDevice)
+                                {
+                                    PrimaryKeyboard.Octave--;
+                                }
+                                if (rawEvent.Device == SecondaryKeyboard.RawDevice)
+                                {
+                                    SecondaryKeyboard.Octave--;
+                                }
+                                NotifyIndicatorsChange();
+                                break;
+
+                            // Transpose
+                            case Key.Right:
+                                if (rawEvent.Device == PrimaryKeyboard.RawDevice)
+                                {
+                                    PrimaryKeyboard.Transp++;
+                                }
+                                if (rawEvent.Device == SecondaryKeyboard.RawDevice)
+                                {
+                                    SecondaryKeyboard.Transp++;
+                                }
+                                NotifyIndicatorsChange();
+                                break;
+
+                            case Key.Left:
+                                if (rawEvent.Device == PrimaryKeyboard.RawDevice)
+                                {
+                                    PrimaryKeyboard.Transp--;
+                                }
+                                if (rawEvent.Device == SecondaryKeyboard.RawDevice)
+                                {
+                                    SecondaryKeyboard.Transp--;
+                                }
+                                NotifyIndicatorsChange();
+                                break;
+
+                            // Bow on/off
+                            case Key.Oem5:
+                                if (BowOn)
+                                {
+                                    BowOn = false;
+                                }
+                                else
+                                {
+                                    BowOn = true;
+                                }
+                                break;
+
+                            // Octave pedal
+                            case Key.Space:
+                                if(!OctavePedal)
+                                    OctavePedal = true;
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                    else if (AltSelector)   // Alt selector on
+                    {
+                        switch (rawEvent.Key)
+                        {
+                            case Key.D1:
+                                HRule = 1;
+                                VRule = 1;
+                                ProcessHVRuleChange();
+                                break;
+                            case Key.D2:
+                                HRule = 1;
+                                VRule = 2;
+                                ProcessHVRuleChange();
+                                break;
+                            case Key.D3:
+                                HRule = 1;
+                                VRule = 3;
+                                ProcessHVRuleChange();
+                                break;
+                            case Key.D4:
+                                HRule = 1;
+                                VRule = 4;
+                                ProcessHVRuleChange();
+                                break;
+                            case Key.D5:
+                                HRule = 1;
+                                VRule = 5;
+                                ProcessHVRuleChange();
+                                break;
+                            case Key.D6:
+                                HRule = 1;
+                                VRule = 6;
+                                ProcessHVRuleChange();
+                                break;
+
+                            // Scales Highlighting
+                            case Key.NumPad0:
+                                CurrentScale = ScalesFactory.Cmin;
+                                break;
+
+                            case Key.Decimal:
+                                CurrentScale = ScalesFactory.sCmin;
+                                break;
+
+                            case Key.NumPad1:
+                                CurrentScale = ScalesFactory.Dmin;
+                                break;
+
+                            case Key.NumPad2:
+                                CurrentScale = ScalesFactory.sDmin;
+                                break;
+
+                            case Key.NumPad3:
+                                CurrentScale = ScalesFactory.Emin;
+                                break;
+
+                            case Key.NumPad4:
+                                CurrentScale = ScalesFactory.Fmin;
+                                break;
+
+                            case Key.NumPad5:
+                                CurrentScale = ScalesFactory.sFmin;
+                                break;
+
+                            case Key.NumPad6:
+                                CurrentScale = ScalesFactory.Gmin;
+                                break;
+
+                            case Key.NumPad7:
+                                CurrentScale = ScalesFactory.sGmin;
+                                break;
+
+                            case Key.NumPad8:
+                                CurrentScale = ScalesFactory.Amin;
+                                break;
+
+                            case Key.NumPad9:
+                                CurrentScale = ScalesFactory.sAmin;
+                                break;
+
+                            case Key.Divide:
+                                CurrentScale = ScalesFactory.Bmin;
+                                break;
+
+                            case Key.Multiply:
+                                CurrentScale = null;
+                                break;
+
+                            default: 
+                                break;
+                        }
+                    }
+
+                }
+                else if (rawEvent.KeyPressState == KeyPressState.Up) // Key Up
+                {
+                    switch (rawEvent.Key)
+                    {
+                        // Alt selector
+                        case Key.RightCtrl:
+                            AltSelector = false;
+                            break;
+
+                        // Modulator key
+                        case Key.Return:
+                            ProcessModulator(false);
+                            break;
+
+                        // Octave pedal
+                        case Key.Space:
+                            if(OctavePedal)
+                                OctavePedal = false;
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+            }
+        }
+
+        private void ProcessHVRuleChange()
+        {
+            int f;
+
+            // Primary Keyboard
+
+            // Row 0
+            f = MasterPitch;
+            foreach (KKey key in PrimaryKeyboard.NoteKeys[0])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 1
+            f = MasterPitch + VRule;
+            foreach (KKey key in PrimaryKeyboard.NoteKeys[1])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 2
+            f = MasterPitch + VRule * 2;
+            foreach (KKey key in PrimaryKeyboard.NoteKeys[2])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 3
+            f = MasterPitch + VRule * 3;
+            foreach (KKey key in PrimaryKeyboard.NoteKeys[3])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 4
+            f = MasterPitch + VRule * 4;
+            foreach (KKey key in PrimaryKeyboard.NoteKeys[4])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Secondary Keyboard
+
+            // Row 0
+            f = MasterPitch;
+            foreach (KKey key in PrimaryKeyboard.NoteKeys[0])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 1
+            f = MasterPitch + VRule;
+            foreach (KKey key in SecondaryKeyboard.NoteKeys[1])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 2
+            f = MasterPitch + VRule * 2;
+            foreach (KKey key in SecondaryKeyboard.NoteKeys[2])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 3
+            f = MasterPitch + VRule * 3;
+            foreach (KKey key in SecondaryKeyboard.NoteKeys[3])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            // Row 4
+            f = MasterPitch + VRule * 4;
+            foreach (KKey key in SecondaryKeyboard.NoteKeys[4])
+            {
+                key.MidiNote = (MidiNotes)f;
+                f += HRule;
+            }
+
+            HighlightScale(CurrentScale);
+        }
+
+        private void ProcessNoteKeyChange(RawInputEventArgs rawEvent, KKey kkey, Keyboards kb)
+        {
+            MidiNotes noteToPlay = MidiNotes.NaN;
+
+            // Determine note to play given keyboard
+            switch (kb)
+            {
+                case Keyboards.Primary:
+                    noteToPlay = kkey.MidiNote + PrimaryKeyboard.Transp + 12 * PrimaryKeyboard.Octave;
+                    break;
+
+                case Keyboards.Secondary:
+                    noteToPlay = kkey.MidiNote + SecondaryKeyboard.Transp + 12 * SecondaryKeyboard.Octave;
+                    break;
+
+                case Keyboards.NaK:
+                    noteToPlay = MidiNotes.NaN;
+                    break;
+            }
+
+            // Add octave pedal rule if octave pedal is down
+            if (OctavePedal)
+            {
+                noteToPlay += OctavePedalRule;
+            }
+
+            // Process note on/off
+            if (rawEvent.KeyPressState == KeyPressState.Up)
+            {
+                if (NotesOn.Contains(noteToPlay) && !DroneNotes.Contains(noteToPlay))
+                {
+                    NotesOn.Remove(noteToPlay);
+                    NoteOff(noteToPlay);
                 }
             }
-            else if(state == KeyPressState.Up)
+            else if (rawEvent.KeyPressState == KeyPressState.Down)
             {
-                switch (key)
+                if (!NotesOn.Contains(noteToPlay))
                 {
-                    // Alt selector
-                    case Key.RightCtrl:
-                        AltSelector = false;
-                        break;
-
-                    // Modulator key
-                    case Key.Return:
-                        ProcessModulator(false);
-                        break;
-
-                    default:
-                        break;
+                    NotesOn.Add(noteToPlay);
+                    NoteOn(noteToPlay);
                 }
+            }
+        }
+
+        private static void SetActiveBackgroundGivenKeyboard(KKey kkey, Keyboards kb)
+        {
+            switch (kb)
+            {
+                case Keyboards.Primary:
+                    kkey.Button.Background = Rack.BrushActivePrimary;
+                    break;
+
+                case Keyboards.Secondary:
+                    kkey.Button.Background = Rack.BrushActiveSecondary;
+                    break;
+
+                case Keyboards.NaK:
+                    break;
             }
         }
 
         private void SetPrimaryKeyboard(RawKeyboardDevice device)
         {
             SecondaryKeyboard.RawDevice = device;
-            if(PrimaryKeyboard.RawDevice == device)
+            if (PrimaryKeyboard.RawDevice == device)
             {
                 PrimaryKeyboard.RawDevice = null;
             }
@@ -658,44 +1010,40 @@ namespace Computharp.Modules
                 case true:
                     MidiModule.SetModulation(ModulationMax);
                     break;
+
                 case false:
                     MidiModule.SetModulation(ModulationMin);
                     break;
             }
-
         }
 
         private void ProcessDronePedal()
         {
-            List<MidiNotes> temp = new List<MidiNotes>();
-            foreach(MidiNotes note in DroneNotes)
+            foreach (MidiNotes note in DroneNotes)
             {
-                temp.Add(note);
+                NoteOff(note);
+                NotesOn.Remove(note);
             }
             DroneNotes.Clear();
 
-            foreach(MidiNotes note in temp)
-            {
-                NoteOff(note);
-            }
-            
-            foreach(MidiNotes note in NotesOn)
+            foreach (MidiNotes note in NotesOn)
             {
                 DroneNotes.Add(note);
             }
         }
 
-        private void HighlightScale(Scale scale)
+        private void HighlightScale(Scale? scale)
         {
-            foreach(List<KKey> lst in PrimaryKeyboard.NoteKeys)
+            foreach (List<KKey> lst in PrimaryKeyboard.NoteKeys)
             {
-                foreach(KKey k in lst)
+                foreach (KKey k in lst)
                 {
-                    if(scale != null)
+                    if (scale != null)
                     {
                         if (scale.IsInScale(k.MidiNote))
                         {
-                            k.BaseBackground = Rack.BrushScale;
+                            RGB clr = ColorHelper.ColorConverter.HslToRgb(Rack.ScaleColors[scale.NotesInScale.IndexOf(k.MidiNote.ToAbsNote())]);
+                            k.BaseBackground = new SolidColorBrush(Color.FromArgb(Rack.KEYBASEALPHA, clr.R, clr.G, clr.B));
                             k.Button.Background = k.BaseBackground;
                         }
                         else
@@ -710,7 +1058,7 @@ namespace Computharp.Modules
                         k.Button.Background = k.BaseBackground;
                     }
                 }
-            }            
+            }
         }
 
         private void NoteOn(MidiNotes midiNote)
@@ -720,10 +1068,34 @@ namespace Computharp.Modules
 
         private void NoteOff(MidiNotes midiNote)
         {
-            if(!DroneNotes.Contains(midiNote))
-                MidiModule.StopNote((int)midiNote);
+            MidiModule.StopNote((int)midiNote);
+        }
+
+        private int pressure = 127;
+
+        public int Pressure
+        {
+            get
+            {
+                return pressure;
+            }
+            set
+            {
+                if (value > 127)
+                {
+                    pressure = 127;
+                }
+                else if (value < 0)
+                {
+                    pressure = 0;
+                }
+                else
+                {
+                    pressure = value;
+                }
+
+                MidiModule.SetPressure(pressure);
+            }
         }
     }
 }
-
-

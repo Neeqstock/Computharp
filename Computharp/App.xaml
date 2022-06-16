@@ -18,6 +18,19 @@
             <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
+        
+        <Style x:Key="NumpadKey" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="False"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="FontSize" Value="12px"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
 
         <Style x:Key="ScaleKey" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="False"/>
@@ -37,6 +50,14 @@
             <Setter Property="FontFamily" Value="Verdana"/>
             <Setter Property="FontSize" Value="11px"/>
             <Setter Property="Foreground" Value="White"/>
+        </Style>
+        
+        <Style x:Key="InfoLabelStatic" TargetType="Label">
+            <Setter Property="OverridesDefaultStyle" Value="False"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="FontSize" Value="11px"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
         </Style>
 
     </Application.Resources>
