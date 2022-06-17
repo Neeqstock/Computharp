@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Computharp"
         mc:Ignorable="d"
-        Title="Computharp" Height="350" Width="800" Loaded="Window_Loaded">
+        Title="Computharp" Height="400" Width="800" Loaded="Window_Loaded">
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/Backgrounds/DarkWood.png" Stretch="Fill" />
     </Window.Background>
@@ -19,7 +19,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="0.05*"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
         
         <!-- Title border -->
@@ -81,9 +81,9 @@
                         <Button x:Name="b_f10" Content="F10" Grid.Column="10" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_f11" Content="F11" Grid.Column="11" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_f12" Content="F12" Grid.Column="12" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_stamp" Content="Stamp" Grid.Column="13" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_ins" Content="Ins" Grid.Column="14" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_canc" Content="Canc" Grid.Column="15" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_stamp" Content="" Grid.Column="13" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_ins" Content="KB 1" Grid.Column="14" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_canc" Content="KB 2" Grid.Column="15" Style="{StaticResource BlackKey}"/>
                     </Grid>
 
                     <!-- Numbers -->
@@ -104,7 +104,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="b_backslash" Content="\" Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_backslash" Content="BOW" Grid.Column="0" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_1" Content="1" Grid.Column="1" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_2" Content="2" Grid.Column="2" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_3" Content="3" Grid.Column="3" Style="{StaticResource BlackKey}"/>
@@ -117,7 +117,7 @@
                         <Button x:Name="b_0" Content="0" Grid.Column="10" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_accent" Content="'" Grid.Column="11" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_iacc" Content="ì" Grid.Column="12" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_backcanc" Content="&lt;---" Grid.Column="13" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_backcanc" Content="MOD" Grid.Column="13" Style="{StaticResource BlackKey}"/>
                     </Grid>
 
                     <!-- QWERTY -->
@@ -138,7 +138,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1.3*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="b_tab" Content="TAB" Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_tab" Content="" Grid.Column="0" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_q" Content="Q" Grid.Column="1" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_w" Content="W" Grid.Column="2" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_e" Content="E" Grid.Column="3" Style="{StaticResource BlackKey}"/>
@@ -151,7 +151,7 @@
                         <Button x:Name="b_p" Content="P" Grid.Column="10" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_eacc" Content="è" Grid.Column="11" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_plus" Content="+" Grid.Column="12" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_enter" Content="Ent" Grid.Column="13" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_enter" Content="SEL" Grid.Column="13" Style="{StaticResource BlackKey}"/>
                     </Grid>
 
                     <!-- ASDFG -->
@@ -172,7 +172,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="b_caps" Content="CAPS" Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_caps" Content="" Grid.Column="0" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_a" Content="A" Grid.Column="1" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_s" Content="S" Grid.Column="2" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_d" Content="D" Grid.Column="3" Style="{StaticResource BlackKey}"/>
@@ -205,7 +205,7 @@
                             <ColumnDefinition Width="1.3*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="b_lshift" Content="LSHIFT" Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_lshift" Content="" Grid.Column="0" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_less" Content="&lt;" Grid.Column="1" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_z" Content="Z" Grid.Column="2" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_x" Content="X" Grid.Column="3" Style="{StaticResource BlackKey}"/>
@@ -217,8 +217,8 @@
                         <Button x:Name="b_comma" Content="," Grid.Column="9" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_period" Content="." Grid.Column="10" Style="{StaticResource BlackKey}"/>
                         <Button x:Name="b_minus" Content="-" Grid.Column="11" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_rshift" Content="RSHIFT" Grid.Column="12" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_up" Content="^" Grid.Column="13" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_rshift" Content="" Grid.Column="12" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_up" Content="O +" Grid.Column="13" Style="{StaticResource BlackKey}"/>
                     </Grid>
 
                     <!-- SPACEBAR -->
@@ -235,16 +235,16 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="b_lctrl" Content="Ctrl" Grid.Column="0" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_fn" Content="fn" Grid.Column="1" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_win" Content="WIN" Grid.Column="2" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_alt" Content="Alt" Grid.Column="3" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_space" Content="" Grid.Column="4" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_altgr" Content="AltGr" Grid.Column="5" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_menu" Content="Menu" Grid.Column="6" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_rctrl" Content="Ctrl" Grid.Column="7" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_left" Content="&lt;" Grid.Column="8" Style="{StaticResource BlackKey}"/>
-                        <Button x:Name="b_down" Content="v" Grid.Column="9" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_lctrl" Content="DRONE" Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_fn" Content="" Grid.Column="1" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_win" Content="" Grid.Column="2" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_alt" Content="" Grid.Column="3" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_space" Content="OCTAVE" HorizontalContentAlignment="Center" Grid.Column="4" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_altgr" Content="" Grid.Column="5" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_menu" Content="" Grid.Column="6" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_rctrl" Content="" Grid.Column="7" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_left" Content="T -" Grid.Column="8" Style="{StaticResource BlackKey}"/>
+                        <Button x:Name="b_down" Content="O -" Grid.Column="9" Style="{StaticResource BlackKey}"/>
                     </Grid>
                 </Grid>
 
@@ -264,21 +264,21 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="b_home" Content="Home" Grid.Row="0"  Grid.Column="0" Style="{StaticResource BlackKey}"/>
-                    <Button x:Name="b_fine" Content="Fine" Grid.Row="0"  Grid.Column="1" Style="{StaticResource BlackKey}"/>
-                    <Button x:Name="b_pgup" Content="PgUp" Grid.Row="0"  Grid.Column="2" Style="{StaticResource BlackKey}"/>
-                    <Button x:Name="b_pgdn" Content="PgDn" Grid.Row="0"  Grid.Column="3" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_home" Content="" Grid.Row="0"  Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_fine" Content="" Grid.Row="0"  Grid.Column="1" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_pgup" Content="MIDI +" Grid.Row="0"  Grid.Column="2" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_pgdn" Content="MIDI -" Grid.Row="0"  Grid.Column="3" Style="{StaticResource BlackKey}"/>
 
 
-                    <Button x:Name="b_blocnum" Content="Bloc" Grid.Row="1"  Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_blocnum" Content="" Grid.Row="1"  Grid.Column="0" Style="{StaticResource BlackKey}"/>
                     <Button x:Name="b_frontslash" Content="B" Grid.Row="1"  Grid.Column="1" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_asterisk" Content="N" Grid.Row="1"  Grid.Column="2" Style="{StaticResource NumpadKey}"/>
-                    <Button x:Name="b_numminus" Content="-" Grid.Row="1"  Grid.Column="3" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_numminus" Content="" Grid.Row="1"  Grid.Column="3" Style="{StaticResource BlackKey}"/>
 
                     <Button x:Name="b_num7" Content="G#" Grid.Row="2"  Grid.Column="0" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_num8" Content="A" Grid.Row="2"  Grid.Column="1" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_num9" Content="A#" Grid.Row="2"  Grid.Column="2" Style="{StaticResource NumpadKey}"/>
-                    <Button x:Name="b_numplus" Content="+" Grid.Row="2"  Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_numplus" Content="" Grid.Row="2"  Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource BlackKey}"/>
 
                     <Button x:Name="b_num4" Content="F" Grid.Row="3"  Grid.Column="0" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_num5" Content="F#" Grid.Row="3"  Grid.Column="1" Style="{StaticResource NumpadKey}"/>
@@ -287,9 +287,9 @@
                     <Button x:Name="b_num1" Content="D" Grid.Row="4"  Grid.Column="0" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_num2" Content="D#" Grid.Row="4"  Grid.Column="1" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_num3" Content="E" Grid.Row="4"  Grid.Column="2" Style="{StaticResource NumpadKey}"/>
-                    <Button x:Name="b_numenter" Content="Enter" Grid.Row="4"  Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_numenter" Content="SEL" Grid.Row="4"  Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource BlackKey}"/>
 
-                    <Button x:Name="b_right" Content="&gt;" Grid.Row="5"  Grid.Column="0" Style="{StaticResource BlackKey}"/>
+                    <Button x:Name="b_right" Content="T +" Grid.Row="5"  Grid.Column="0" Style="{StaticResource BlackKey}"/>
                     <Button x:Name="b_num0" Content="C" Grid.Row="5"  Grid.Column="1" Style="{StaticResource NumpadKey}"/>
                     <Button x:Name="b_numperiod" Content="C#" Grid.Row="5"  Grid.Column="2" Style="{StaticResource NumpadKey}"/>
                 </Grid>
@@ -311,53 +311,57 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                <ProgressBar x:Name="prb_Pressure" Grid.Row="0" Grid.Column="0" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Minimum="0" Maximum="127" Value="127" Margin="5,5,5,5" Foreground="White" Opacity="0.8"/>
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                    <Label Style="{StaticResource InfoLabelStatic}" Content="Bow: "/>
+                    <Label Name="lbl_BowOn" Style="{StaticResource InfoLabel}" Content="Off"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
+                    <Label Style="{StaticResource InfoLabelStatic}" Content="Scale: "/>
+                    <Label Name="lbl_CurrentScale" Style="{StaticResource InfoLabel}" Content="Off"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Key code: "/>
                     <Label Name="lbl_KeyCode" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="State: "/>
                     <Label Name="lbl_KeyState" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Test: "/>
                     <Label Name="lbl_Test" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
                 
-                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Midi Out: "/>
                     <Label Name="lbl_MidiOut" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
                 
-                <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Primary Keyboard: "/>
                     <Label Name="lbl_PrimaryKeyboardId" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Octave: "/>
                     <Label Name="lbl_PrimaryKeyboardOctave" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+                <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Transp: "/>
                     <Label Name="lbl_PrimaryKeyboardTransp" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
                 
-                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+                <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Secondary Keyboard: "/>
                     <Label Name="lbl_SecondaryKeyboardId" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Octave: "/>
                     <Label Name="lbl_SecondaryKeyboardOctave" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal">
+                <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Transp: "/>
                     <Label Name="lbl_SecondaryKeyboardTransp" Style="{StaticResource InfoLabel}" Content="-"/>
-                </StackPanel>
-                <ProgressBar x:Name="prb_Pressure" Grid.Row="4" Grid.Column="0" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Minimum="0" Maximum="127" Value="127" Margin="5,5,5,5" Foreground="White" Opacity="0.8"/>
-                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
-                    <Label Style="{StaticResource InfoLabelStatic}" Content="Bow: "/>
-                    <Label Name="lbl_BowOn" Style="{StaticResource InfoLabel}" Content="Off"/>
                 </StackPanel>
             </Grid>
 

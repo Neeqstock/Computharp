@@ -1,0 +1,95 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj",
+        "projectName": "Computharp",
+        "projectPath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj",
+        "packagesPath": "C:\\Users\\neequ\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\neequ\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\root_c87\\Frammenti Software\\NugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
+            "projectReferences": {
+              "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\NeeqDMIs\\NeeqDMIs.csproj": {
+                "projectPath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\NeeqDMIs\\NeeqDMIs.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "ColorHelper": {
+              "target": "Package",
+              "version": "[1.6.2, )"
+            },
+            "RawInputProcessor": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\NeeqDMIs\\NeeqDMIs.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\NeeqDMIs\\NeeqDMIs.csproj",
+        "projectName": "NeeqDMIs",
+        "projectPath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\NeeqDMIs\\NeeqDMIs.csproj",
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
+      }
+    }
+  }
+}

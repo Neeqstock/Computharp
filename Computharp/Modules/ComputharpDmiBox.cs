@@ -6,6 +6,7 @@ using NeeqDMIs.MIDI;
 using NeeqDMIs.Mouse;
 using NeeqDMIs.Music;
 using RawInputProcessor;
+using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,6 +32,16 @@ namespace Computharp.Modules
         public List<MidiNotes> NotesOn = new List<MidiNotes>();
         public List<MidiNotes> DroneNotes = new List<MidiNotes>();
         public List<MidiNotes> OctavePedalNotes = new List<MidiNotes>();
+
+        // todo: bring all key assignments to keybindings!
+        #region Keybindings     
+        public const Key KEYBIND_KB1 = Key.Insert;
+        public const Key KEYBIND_KB2 = Key.Delete;
+        public const Key KEYBIND_BOW = Key.Oem5;
+        #endregion
+
+        private List<KeyValuePair<KKey, AbsNotes>> NumpadScaleSelectors { get; set; } = new List<KeyValuePair<KKey, AbsNotes>>();
+
         private Scale? currentScale = null;
         public int OctavePedalRule { get; set; } = -12;
 
@@ -214,12 +225,30 @@ namespace Computharp.Modules
                 MW.lbl_PrimaryKeyboardId.Content = PrimaryKeyboard.RawDevice.Name.ToString();
                 MW.lbl_PrimaryKeyboardTransp.Content = PrimaryKeyboard.Transp.ToString();
                 MW.lbl_PrimaryKeyboardOctave.Content = PrimaryKeyboard.Octave.ToString();
+
+                foreach(var kkey in PrimaryKeyboard.FunKeys)
+                {
+                    if (kkey.Key == KEYBIND_KB1)
+                    {
+                        kkey.BaseBackground = Rack.BrushMiddle;
+                        kkey.Button.Background = kkey.BaseBackground;
+                    }
+                }
             }
             else
             {
                 MW.lbl_PrimaryKeyboardId.Content = "-";
                 MW.lbl_PrimaryKeyboardTransp.Content = "-";
                 MW.lbl_PrimaryKeyboardOctave.Content = "-";
+
+                foreach (var kkey in PrimaryKeyboard.FunKeys)
+                {
+                    if (kkey.Key == KEYBIND_KB1)
+                    {
+                        kkey.BaseBackground = Rack.BrushNeutral;
+                        kkey.Button.Background = kkey.BaseBackground;
+                    }
+                }
             }
 
             if (SecondaryKeyboard.RawDevice != null)
@@ -227,23 +256,118 @@ namespace Computharp.Modules
                 MW.lbl_SecondaryKeyboardId.Content = SecondaryKeyboard.RawDevice.Name.ToString();
                 MW.lbl_SecondaryKeyboardTransp.Content = SecondaryKeyboard.Transp.ToString();
                 MW.lbl_SecondaryKeyboardOctave.Content = SecondaryKeyboard.Octave.ToString();
+
+                foreach (var kkey in PrimaryKeyboard.FunKeys)
+                {
+                    if (kkey.Key == KEYBIND_KB2)
+                    {
+                        kkey.BaseBackground = Rack.BrushMiddle;
+                        kkey.Button.Background = kkey.BaseBackground;
+                    }
+                }
             }
             else
             {
                 MW.lbl_SecondaryKeyboardId.Content = "-";
                 MW.lbl_SecondaryKeyboardTransp.Content = "-";
                 MW.lbl_SecondaryKeyboardOctave.Content = "-";
+
+                foreach (var kkey in PrimaryKeyboard.FunKeys)
+                {
+                    if (kkey.Key == KEYBIND_KB2)
+                    {
+                        kkey.BaseBackground = Rack.BrushNeutral;
+                        kkey.Button.Background = kkey.BaseBackground;
+                    }
+                }
             }
 
             switch (BowOn)
             {
                 case true:
                     MW.lbl_BowOn.Content = "On";
+                    foreach (var kkey in PrimaryKeyboard.FunKeys)
+                    {
+                        if (kkey.Key == KEYBIND_BOW)
+                        {
+                            kkey.BaseBackground = Rack.BrushMiddle;
+                            kkey.Button.Background = kkey.BaseBackground;
+                        }
+                    }
                     break;
 
                 case false:
                     MW.lbl_BowOn.Content = "Off";
+                    foreach (var kkey in PrimaryKeyboard.FunKeys)
+                    {
+                        if (kkey.Key == KEYBIND_BOW)
+                        {
+                            kkey.BaseBackground = Rack.BrushNeutral;
+                            kkey.Button.Background = kkey.BaseBackground;
+                        }
+                    }
                     break;
+            }
+
+            if(CurrentScale != null)
+            {
+                MW.lbl_CurrentScale.Content = CurrentScale.GetName();
+                switch (CurrentScale.ScaleCode)
+                {
+                    case ScaleCodes.min:
+                        MW.lbl_CurrentScale.Foreground = Rack.BrushMinor;
+                        break;
+                    case ScaleCodes.maj:
+                        MW.lbl_CurrentScale.Foreground = Rack.BrushMajor;
+                        break;
+                    case ScaleCodes.chrom:
+                        MW.lbl_CurrentScale.Foreground = Rack.BrushDefaultString;
+                        break;
+                }
+            }
+            else
+            {
+                MW.lbl_CurrentScale.Content = Rack.DEFAULTVOIDSTRING;
+                MW.lbl_CurrentScale.Foreground = Rack.BrushDefaultString;
+            }
+
+            // Numpad scale color
+            if(CurrentScale != null)
+            {
+                foreach (KeyValuePair<KKey, AbsNotes> numkey in NumpadScaleSelectors)
+                {
+                    if (numkey.Value == CurrentScale.RootNote)
+                    {
+                        switch (CurrentScale.ScaleCode)
+                        {
+                            case ScaleCodes.min:
+                                numkey.Key.BaseBackground = Rack.BrushMinor;
+                                numkey.Key.Button.Background = numkey.Key.BaseBackground;
+                                break;
+                            case ScaleCodes.maj:
+                                numkey.Key.BaseBackground = Rack.BrushMajor;
+                                numkey.Key.Button.Background = numkey.Key.BaseBackground;
+                                break;
+                            case ScaleCodes.chrom:
+                                numkey.Key.BaseBackground = Rack.BrushNeutral;
+                                numkey.Key.Button.Background = numkey.Key.BaseBackground;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        numkey.Key.BaseBackground = Rack.BrushNeutral;
+                        numkey.Key.Button.Background = numkey.Key.BaseBackground;
+                    }
+                }
+            }
+            else
+            {
+                foreach(var numkey in NumpadScaleSelectors)
+                {
+                    numkey.Key.BaseBackground = Rack.BrushNeutral;
+                    numkey.Key.Button.Background = numkey.Key.BaseBackground;
+                }
             }
         }
 
@@ -351,6 +475,14 @@ namespace Computharp.Modules
                 new KeyValuePair<Button, Key>(MW.b_stamp, Key.Snapshot),
                 new KeyValuePair<Button, Key>(MW.b_ins, Key.Insert),
                 new KeyValuePair<Button, Key>(MW.b_canc, Key.Delete),
+                //new KeyValuePair<Button, Key>(MW.b_numenter, Key.Return), // Problem: same keycode as non-numpad one
+                new KeyValuePair<Button, Key>(MW.b_numplus, Key.Add),
+                new KeyValuePair<Button, Key>(MW.b_blocnum, Key.NumLock),
+                new KeyValuePair<Button, Key>(MW.b_numminus, Key.Subtract),
+                new KeyValuePair<Button, Key>(MW.b_home, Key.Home),
+                new KeyValuePair<Button, Key>(MW.b_fine, Key.End),
+                new KeyValuePair<Button, Key>(MW.b_pgup, Key.PageUp),
+                new KeyValuePair<Button, Key>(MW.b_pgdn, Key.Next),
 
                 new KeyValuePair<Button, Key>(MW.b_num0, Key.NumPad0),
                 new KeyValuePair<Button, Key>(MW.b_numperiod, Key.Decimal),
@@ -363,16 +495,8 @@ namespace Computharp.Modules
                 new KeyValuePair<Button, Key>(MW.b_num7, Key.NumPad7),
                 new KeyValuePair<Button, Key>(MW.b_num8, Key.NumPad8),
                 new KeyValuePair<Button, Key>(MW.b_num9, Key.NumPad9),
-                //new KeyValuePair<Button, Key>(MW.b_numenter, Key.Return), // Problem: same keycode as non-numpad one
-                new KeyValuePair<Button, Key>(MW.b_numplus, Key.Add),
-                new KeyValuePair<Button, Key>(MW.b_blocnum, Key.NumLock),
                 new KeyValuePair<Button, Key>(MW.b_frontslash, Key.Divide),
                 new KeyValuePair<Button, Key>(MW.b_asterisk, Key.Multiply),
-                new KeyValuePair<Button, Key>(MW.b_numminus, Key.Subtract),
-                new KeyValuePair<Button, Key>(MW.b_home, Key.Home),
-                new KeyValuePair<Button, Key>(MW.b_fine, Key.End),
-                new KeyValuePair<Button, Key>(MW.b_pgup, Key.PageUp),
-                new KeyValuePair<Button, Key>(MW.b_pgdn, Key.Next),
             };
         }
 
@@ -433,6 +557,26 @@ namespace Computharp.Modules
                 PrimaryKeyboard.FunKeys.Add(new KKey() { Button = kvp.Key, Key = kvp.Value, KKeyType = KKeyTypes.Functional, MidiNote = MidiNotes.NaN });
                 i += HRule;
             }
+
+            // Numpad Scale Selectors list
+            NumpadScaleSelectors.Clear();
+            foreach (KKey kkey in PrimaryKeyboard.FunKeys)
+            {
+                if (kkey.Key == Key.NumPad0) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.C)); }
+                if (kkey.Key == Key.Decimal) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.sC)); }
+                if (kkey.Key == Key.NumPad1) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.D)); }
+                if (kkey.Key == Key.NumPad2) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.sD)); }
+                if (kkey.Key == Key.NumPad3) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.E)); }
+                if (kkey.Key == Key.NumPad4) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.F)); }
+                if (kkey.Key == Key.NumPad5) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.sF)); }
+                if (kkey.Key == Key.NumPad6) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.G)); }
+                if (kkey.Key == Key.NumPad7) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.sG)); }
+                if (kkey.Key == Key.NumPad8) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.A)); }
+                if (kkey.Key == Key.NumPad9) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.sA)); }
+                if (kkey.Key == Key.Divide) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.B)); }
+                if (kkey.Key == Key.Multiply) { NumpadScaleSelectors.Add(new KeyValuePair<KKey, AbsNotes>(kkey, AbsNotes.NaN)); }
+            }
+
         }
 
         private void CreateSecondaryKeyboard()
@@ -561,78 +705,73 @@ namespace Computharp.Modules
 
                             // Scales Highlighting
                             case Key.NumPad0:
-                                CurrentScale = ScalesFactory.Cmaj;
+                                ProcessNumPadScaleChange(Key.NumPad0);
                                 break;
 
                             case Key.Decimal:
-                                CurrentScale = ScalesFactory.sCmaj;
+                                ProcessNumPadScaleChange(Key.Decimal);
                                 break;
 
                             case Key.NumPad1:
-                                CurrentScale = ScalesFactory.Dmaj;
+                                ProcessNumPadScaleChange(Key.NumPad1);
                                 break;
 
                             case Key.NumPad2:
-                                CurrentScale = ScalesFactory.sDmaj;
+                                ProcessNumPadScaleChange(Key.NumPad2);
                                 break;
 
                             case Key.NumPad3:
-                                CurrentScale = ScalesFactory.Emaj;
+                                ProcessNumPadScaleChange(Key.NumPad3);
                                 break;
 
                             case Key.NumPad4:
-                                CurrentScale = ScalesFactory.Fmaj;
+                                ProcessNumPadScaleChange(Key.NumPad4);
                                 break;
 
                             case Key.NumPad5:
-                                CurrentScale = ScalesFactory.sFmaj;
+                                ProcessNumPadScaleChange(Key.NumPad5);
                                 break;
 
                             case Key.NumPad6:
-                                CurrentScale = ScalesFactory.Gmaj;
+                                ProcessNumPadScaleChange(Key.NumPad6);
                                 break;
 
                             case Key.NumPad7:
-                                CurrentScale = ScalesFactory.sGmaj;
+                                ProcessNumPadScaleChange(Key.NumPad7);
                                 break;
 
                             case Key.NumPad8:
-                                CurrentScale = ScalesFactory.Amaj;
+                                ProcessNumPadScaleChange(Key.NumPad8);
                                 break;
 
                             case Key.NumPad9:
-                                CurrentScale = ScalesFactory.sAmaj;
+                                ProcessNumPadScaleChange(Key.NumPad9);
                                 break;
 
                             case Key.Divide:
-                                CurrentScale = ScalesFactory.Bmaj;
+                                ProcessNumPadScaleChange(Key.Divide);
                                 break;
 
                             case Key.Multiply:
-                                CurrentScale = null;
+                                ProcessNumPadScaleChange(Key.Multiply);
                                 break;
 
                             // Alt selector
-                            case Key.RightCtrl:
+                            case Key.Return:
                                 AltSelector = true;
                                 break;
 
-                            // Drone pedal
-                            case Key.LeftCtrl:
-                                ProcessDronePedal();
-                                break;
-
                             // Modulator key
-                            case Key.Return:
+                            case Key.Back:
                                 ProcessModulator(true);
                                 break;
 
                             // MainKeyboard selector
-                            case Key.Delete:
+                            case KEYBIND_KB2:
                                 SetPrimaryKeyboard(rawEvent.Device);
                                 break;
                             // SecondaryKeyboard selector
-                            case Key.Insert:
+                            case KEYBIND_KB1:
                                 SetSecondaryKeyboard(rawEvent.Device);
                                 break;
 
@@ -687,7 +826,7 @@ namespace Computharp.Modules
                                 break;
 
                             // Bow on/off
-                            case Key.Oem5:
+                            case KEYBIND_BOW:
                                 if (BowOn)
                                 {
                                     BowOn = false;
@@ -743,59 +882,6 @@ namespace Computharp.Modules
                                 ProcessHVRuleChange();
                                 break;
 
-                            // Scales Highlighting
-                            case Key.NumPad0:
-                                CurrentScale = ScalesFactory.Cmin;
-                                break;
-
-                            case Key.Decimal:
-                                CurrentScale = ScalesFactory.sCmin;
-                                break;
-
-                            case Key.NumPad1:
-                                CurrentScale = ScalesFactory.Dmin;
-                                break;
-
-                            case Key.NumPad2:
-                                CurrentScale = ScalesFactory.sDmin;
-                                break;
-
-                            case Key.NumPad3:
-                                CurrentScale = ScalesFactory.Emin;
-                                break;
-
-                            case Key.NumPad4:
-                                CurrentScale = ScalesFactory.Fmin;
-                                break;
-
-                            case Key.NumPad5:
-                                CurrentScale = ScalesFactory.sFmin;
-                                break;
-
-                            case Key.NumPad6:
-                                CurrentScale = ScalesFactory.Gmin;
-                                break;
-
-                            case Key.NumPad7:
-                                CurrentScale = ScalesFactory.sGmin;
-                                break;
-
-                            case Key.NumPad8:
-                                CurrentScale = ScalesFactory.Amin;
-                                break;
-
-                            case Key.NumPad9:
-                                CurrentScale = ScalesFactory.sAmin;
-                                break;
-
-                            case Key.Divide:
-                                CurrentScale = ScalesFactory.Bmin;
-                                break;
-
-                            case Key.Multiply:
-                                CurrentScale = null;
-                                break;
-
                             default: 
                                 break;
                         }
@@ -807,12 +893,12 @@ namespace Computharp.Modules
                     switch (rawEvent.Key)
                     {
                         // Alt selector
-                        case Key.RightCtrl:
+                        case Key.Return:
                             AltSelector = false;
                             break;
 
                         // Modulator key
-                        case Key.Return:
+                        case Key.Back:
                             ProcessModulator(false);
                             break;
 
@@ -822,12 +908,73 @@ namespace Computharp.Modules
                                 OctavePedal = false;
                             break;
 
+                        // Drone pedal
+                        case Key.LeftCtrl:
+                            ProcessDronePedal();
+                            break;
+
                         default:
                             break;
                     }
                 }
 
+                if(kkey.KKeyType == KKeyTypes.Note && rawEvent.KeyPressState == KeyPressState.Down)
+                {
+                    AbsNotes newRoot = kkey.MidiNote.ToAbsNote();
+                    CurrentScaleFuzzySelect(newRoot);
+
+                    NotifyIndicatorsChange();
+                }
             }
+        }
+
+        private void CurrentScaleFuzzySelect(AbsNotes newRoot)
+        {
+            if(newRoot == AbsNotes.NaN)
+            {
+                CurrentScale = null;
+            }
+            else if (CurrentScale != null)
+            {
+                AbsNotes currentRoot = CurrentScale.RootNote;
+
+                if (currentRoot != newRoot)
+                {
+                    CurrentScale = new Scale(newRoot, ScaleCodes.maj);
+                }
+                else
+                {
+                    switch (CurrentScale.ScaleCode)
+                    {
+                        case ScaleCodes.maj:
+                            CurrentScale = new Scale(newRoot, ScaleCodes.min);
+                            break;
+                        case ScaleCodes.min:
+                            CurrentScale = new Scale(newRoot, ScaleCodes.maj);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                CurrentScale = CurrentScale = new Scale(newRoot, ScaleCodes.maj);
+            }
+        }
+
+        private void ProcessNumPadScaleChange(Key keyToProcess)
+        {
+            AbsNotes rootNote = AbsNotes.NaN;
+
+            foreach(var numkey in NumpadScaleSelectors)
+            {
+                if (numkey.Key.Key == keyToProcess)
+                {
+                    rootNote = numkey.Value;
+                }
+            }
+
+            CurrentScaleFuzzySelect(rootNote);
+
         }
 
         private void ProcessHVRuleChange()
@@ -964,6 +1111,7 @@ namespace Computharp.Modules
                     NoteOn(noteToPlay);
                 }
             }
+
         }
 
         private static void SetActiveBackgroundGivenKeyboard(KKey kkey, Keyboards kb)
@@ -1030,6 +1178,30 @@ namespace Computharp.Modules
             {
                 DroneNotes.Add(note);
             }
+
+            // Highlight
+            foreach (List<KKey> lst in PrimaryKeyboard.NoteKeys)
+            {
+                foreach (KKey key in lst)
+                {
+                    bool drone = false;
+                    foreach (MidiNotes note in DroneNotes)
+                    {
+                        if (key.MidiNote.ToAbsNote() == note.ToAbsNote())
+                        {
+                            drone = true;
+                        }
+                    }
+                    if (drone)
+                    {
+                        key.Button.BorderThickness = new System.Windows.Thickness(2);
+                    }
+                    else
+                    {
+                        key.Button.BorderThickness = new System.Windows.Thickness(0);
+                    }
+                }
+            }
         }
 
         private void HighlightScale(Scale? scale)
@@ -1057,8 +1229,24 @@ namespace Computharp.Modules
                         k.BaseBackground = Rack.BrushNeutral;
                         k.Button.Background = k.BaseBackground;
                     }
+
+                    // Drones
+                    foreach (MidiNotes droneNote in DroneNotes)
+                    {
+                        if (droneNote.ToAbsNote() == k.MidiNote.ToAbsNote())
+                        {
+                            //k.BaseBackground = Rack.BrushDrone;
+                            //k.Button.Background = Rack.BrushDrone;
+                            //if(k.KeyPressState == KeyPressState.Down)
+                            //{
+                            //    k.Button.Background = Rack.BrushActivePrimary;
+                            //}
+                        }
+                    }
                 }
             }
+
+            NotifyIndicatorsChange();
         }
 
         private void NoteOn(MidiNotes midiNote)
