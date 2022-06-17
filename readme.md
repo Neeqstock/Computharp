@@ -6,7 +6,7 @@
 
 Computharp is a highly hackable Digital Musical Instrument and MIDI controller made to play music with computer keyboards. Plural, because Computharp is able to distinguish between multiple keyboards, and assign controls to them independently. In this way, you can use both hands to play on different octaves, on different keyboards.
 
-The layout is isomorphic: every letter, number and function key row becomes a "string" of the instrument. Every string is tuned three half-tones up from the previous one, but the rule can be changed (e.g. to five half-tones, like a normal guitar).
+The layout is isomorphic: every letter, number and function key row becomes a "string" of the instrument. Every string is tuned three half-tones up from the previous one, but the rule can be changed (e.g. to five half-tones, like a normal guitar), with a single keypress.
 
 Touchpad and/or mouse can be used like violin bows to control channel pressure.
 
