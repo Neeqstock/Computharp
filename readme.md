@@ -8,11 +8,13 @@ Computharp is a highly hackable Digital Musical Instrument and MIDI controller m
 
 The layout is isomorphic: every letter, number and function key row becomes a "string" of the instrument. Every string is tuned three half-tones up from the previous one, but the rule can be changed (e.g. to five half-tones, like a normal guitar).
 
+Touchpad and/or mouse can be used like violin bows to control channel pressure.
+
 Every keyboard can be tuned in a different way, and the interface can highlight different scales.
 
 Scores can be written as words. A major scale, for example, could be written as "**cbfgry56**". Theoretically, I expect some writing skills can be transfered into music playing skills.
 
-![Screenshot](https://github.com/Neeqstock/Computharp/blob/main/Images/Screenshot%20(2022%20june%2013).png)
+![Screenshot](https://github.com/Neeqstock/Computharp/blob/main/Images/Screenshot%20(2022%20june%2017).png)
 
 
 
