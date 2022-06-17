@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Computharp"
         mc:Ignorable="d"
-        Title="Computharp" Height="400" Width="800" Loaded="Window_Loaded">
+        Title="Computharp" Height="400" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/Backgrounds/DarkWood.png" Stretch="Fill" />
     </Window.Background>
@@ -13,19 +13,20 @@
     <!-- Main Grid -->
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="289*"/>
-            <ColumnDefinition Width="111*"/>
+            <ColumnDefinition Width="497*"/>
+            <ColumnDefinition Width="81*"/>
+            <ColumnDefinition Width="222*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.05*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
-        
+
         <!-- Title border -->
-        <Label Grid.Row="0" Grid.Column="1" Content="Computharp" FontFamily="Magneto" HorizontalAlignment="Right" FontSize="16" Foreground="White" VerticalAlignment="Top"/>
+        <Label Grid.Column="2" Content="Computharp" FontFamily="Magneto" HorizontalAlignment="Left" FontSize="16" Foreground="White" VerticalAlignment="Center" Margin="108,0,0,0"/>
         <!-- Keyboard border -->
-        <Border Grid.Row="1" Margin="5,0,5,5" BorderBrush="White" BorderThickness="1" Grid.ColumnSpan="2">
+        <Border Grid.Row="1" Margin="5,0,5,5" BorderBrush="White" BorderThickness="1" Grid.ColumnSpan="3">
             <Border.Background>
                 <ImageBrush ImageSource="pack://application:,,,/Backgrounds/LightWood.jpg" Stretch="Fill"/>
             </Border.Background>
@@ -40,7 +41,8 @@
                 <!-- Glyphs side -->
                 <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/> <!-- Old 0.6 -->
+                        <RowDefinition Height="1*"/>
+                        <!-- Old 0.6 -->
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
@@ -251,7 +253,8 @@
                 <!-- Numpad side -->
                 <Grid Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/> <!-- Old: 0.6* -->
+                        <RowDefinition Height="1*"/>
+                        <!-- Old: 0.6* -->
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
@@ -297,7 +300,7 @@
         </Border>
 
         <!-- Indicators -->
-        <Border Grid.Row="2" Grid.ColumnSpan="2">
+        <Border Grid.Row="1" Grid.ColumnSpan="3" Margin="0,236,0,0" Grid.RowSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -332,12 +335,12 @@
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Test: "/>
                     <Label Name="lbl_Test" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Midi Out: "/>
                     <Label Name="lbl_MidiOut" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Primary Keyboard: "/>
                     <Label Name="lbl_PrimaryKeyboardId" Style="{StaticResource InfoLabel}" Content="-"/>
@@ -350,7 +353,7 @@
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Transp: "/>
                     <Label Name="lbl_PrimaryKeyboardTransp" Style="{StaticResource InfoLabel}" Content="-"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
                     <Label Style="{StaticResource InfoLabelStatic}" Content="Secondary Keyboard: "/>
                     <Label Name="lbl_SecondaryKeyboardId" Style="{StaticResource InfoLabel}" Content="-"/>

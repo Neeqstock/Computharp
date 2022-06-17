@@ -10,7 +10,7 @@ namespace Computharp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DispatcherTimer Dispatcher;
+        private DispatcherTimer DispatcherTmr;
 
         public MainWindow()
         {
@@ -21,16 +21,23 @@ namespace Computharp
         {
             Rack.DMIBox = new ComputharpDmiBox(this);
 
-            Dispatcher = new DispatcherTimer();
-            Dispatcher.Interval = new TimeSpan(150);
-            Dispatcher.Tick += Dispatcher_Tick;
-            Dispatcher.Start();
+            DispatcherTmr = new DispatcherTimer();
+            DispatcherTmr.Interval = new TimeSpan(150);
+            DispatcherTmr.Tick += Dispatcher_Tick;
+            DispatcherTmr.Start();
+
+            this.Closed += (sender, e) => this.Dispatcher.InvokeShutdown();
         }
 
         private void Dispatcher_Tick(object? sender, EventArgs e)
         {
             prb_Pressure.Value = Rack.DMIBox.Pressure;
             lbl_Test.Content = Rack.DMIBox.Pressure;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
