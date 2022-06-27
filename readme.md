@@ -3,6 +3,7 @@
 *A strange but effective way to play music with your PC keyboard(s)*
 
 **Complete readme and instruction coming soon! This is just a draft.**
+More info and guide on my [personal website](https://neeqstock.notion.site/Computharp-3a6cfb04dec64d9084beaab417344956).
 
 Computharp is a highly hackable Digital Musical Instrument and MIDI controller made to play music with computer keyboards. Plural, because Computharp is able to distinguish between multiple keyboards, and assign controls to them independently. In this way, you can use both hands to play on different octaves, on different keyboards.
 
