@@ -1,5 +1,6 @@
 ﻿using ColorHelper;
 using Computharp.Behaviors;
+using NeeqDMIs.Eyetracking.Tobii;
 using NeeqDMIs.Filters.ValueFilters;
 using NeeqDMIs.Keyboard;
 using NeeqDMIs.MIDI;
@@ -106,7 +107,7 @@ namespace Computharp.Modules
 
             MidiModule = new MidiModuleNAudio(1, 1);
 
-            KeyboardModule = new KeyboardModule(new WindowInteropHelper(window).Handle);
+            KeyboardModule = new KeyboardModule(new WindowInteropHelper(window).Handle, RawInputCaptureMode.Foreground);
             KeyboardModule.KeyboardBehaviors.Add(new KBlistenKeystrokes());
 
             MouseModule = new MouseModule(20000, 17f, new DoubleFilterMAExpDecaying(0.1f), new DoubleFilterMAExpDecaying(0.1f), MouseModuleModes.Normal, 150f);
@@ -117,9 +118,11 @@ namespace Computharp.Modules
         }
 
         public MainWindow MW { get; set; }
+
         public KeyboardModule KeyboardModule { get; set; }
         public MouseModule MouseModule { get; set; }
         public MidiModuleNAudio MidiModule { get; set; }
+        public TobiiModule TobiiModule { get; set; }
 
         public Keyboard PrimaryKeyboard { get; set; }
         public Keyboard SecondaryKeyboard { get; set; }

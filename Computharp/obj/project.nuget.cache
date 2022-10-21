@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "E5L6vSv+OXXXE1drU8AkDFr30sB3w/RfTZqp8LXNgKDiyW0yVESHbgFijBykm1g4rbR+xDxdin+gOcb11bVmXw==",
+  "dgSpecHash": "lphmcPZwDbCFgn+FPG8nPpwpmVWfWKLVh73elyZprFV+xVwT/fJ5HG67ZaXH3c/hVZkKwBKbS0cNZ/jEjs5JAw==",
   "success": true,
   "projectFilePath": "C:\\Users\\neequ\\OneDrive\\Documenti\\GitHub\\Computharp\\Computharp\\Computharp.csproj",
   "expectedPackageFiles": [
@@ -12,7 +12,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'RawInputProcessor 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'RawInputProcessor 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "RawInputProcessor",
       "targetGraphs": [
         "net6.0-windows7.0"

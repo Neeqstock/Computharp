@@ -5,11 +5,18 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <PackageIcon>Computharp_Logo_(black).png</PackageIcon>
+    <StartupObject>Computharp.App</StartupObject>
+    <ApplicationIcon>Computharp_Logo__black_.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Backgrounds\DarkWood.png" />
     <None Remove="Backgrounds\LightWood.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Computharp_Logo__black_.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +36,13 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Images\Computharp_Logo_(black).png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
