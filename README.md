@@ -21,6 +21,8 @@ Every keyboard can be tuned in a different way, and the interface can highlight 
 
 Scores can be written as words. A major scale, for example, could be written as "cbfgry56". Theoretically, I expect some writing skills can be transfered into music playing skills.
 
+![Screens](/Images/Screenshot%20(2022%20june%2017).png)
+
 ## Requirements
 - A laptop with a working touchpad, a working keyboard, a working screen
 - Possibly an extra keyboard, and please clean your grandma's keyboard from dust and crap, and buy a PS/2 to USB adapter
