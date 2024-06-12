@@ -7,7 +7,7 @@
 Please refer to the [Computharp page](https://neeqstock.notion.site/Computharp-3a6cfb04dec64d9084beaab417344956) on my personal website for more informations, instrument description and usage guide.
 
 </br><div align="center">
-    <img src="ComputharpIcon.png" width="150px" alt="Computharp logo">    
+    <img src="ComputharpLogo.png" width="150px" alt="Computharp logo">    
 
 </div></br>
 
