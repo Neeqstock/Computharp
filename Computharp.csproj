@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>ComputharpIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tools\ColorSpaces.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Backgrounds\DarkWood.png" />
+    <None Remove="Backgrounds\LightWood.jpg" />
+    <None Remove="Backgrounds\LightWood.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ComputharpIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ColorHelper" Version="1.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NITHdmis\NITHdmis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Tools\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Backgrounds\DarkWood.png" />
+    <Resource Include="Backgrounds\LightWood.jpg" />
+    <Resource Include="Backgrounds\LightWood.png" />
+  </ItemGroup>
+
+</Project>
